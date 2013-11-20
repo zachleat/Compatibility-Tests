@@ -9,16 +9,17 @@
 		var targetSupport = (function( win, doc ) {
 			// This test makes Blackberry OS 5 go infinite, so we opt-out here.
 			// Tested OK on other proxy browsers (Kindle, Opera Mini)
-			if( window.blackberry && !window.WebKitPoint ) {
+			if( window.blackberry && !window.WebKitPoint || !doc.scripts.length ) {
 				return false;
 			}
 
-			var ref = doc.getElementsByTagName('script')[0],
+			// Side note: BB OS5 does not support doc.scripts.
+			var ref = doc.scripts[0],
 				node = doc.createElement( 'div' ),
 				id = 'id' + ( new Date() ).getTime(),
 				previousHash = ( win.location.hash || '' ).substr( 1 );
 
-			node.innerHTML = '<style type="text/css">#' + id + '{color:#000;}#' + id + ':target{color: red;}</style><div id="' + id + '"></div>';
+			node.innerHTML = '<style>#' + id + '{color:#000;}#' + id + ':target{color: red;}</style><div id="' + id + '"></div>';
 			ref.parentNode.insertBefore( node, ref );
 
 			// replacestate and location.hash don’t work here: https://bugs.webkit.org/show_bug.cgi?id=83490
